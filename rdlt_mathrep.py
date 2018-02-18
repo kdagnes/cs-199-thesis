@@ -25,16 +25,29 @@ for i in range(0, len(arcs)):
  	j = [int(k) for k in j]
  	matrix[i] = j
 
-print(matrix)
+print("Input Configuration (Enter 0 when done):")
 
-X = np.array(input("Input X(Vertex to be traversed):").split())
-X=[int(i) for i in X]
+while(1):
+	conf = input()
+	if (conf == "0"):
+		break
+	conf = conf.split(",")
+	X = np.zeros(len(vertices))
+	for pair in conf:
+		pair = pair.split()
+		for vertex in range(0, len(vertices)):
+			if vertices[vertex] == pair[1]:
+				X[vertex] = 1
+
+	l_cons_new = l_cons + matrix.dot(X)
+	print("L_k:" + str(l_cons_new)) 
+	print("Arcs to be traversed:" + str(l_cons - l_cons_new) + "\n")	
+	l_cons = l_cons_new
+
+
+
 #L-constraint checking
-l_cons_new = l_cons + matrix.dot(X)
-print("L_k:")
-print(l_cons_new)
-print("Arcs to be traversed:")
-print(l_cons - l_cons_new)
+
 
 
 
