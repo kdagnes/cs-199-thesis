@@ -1,15 +1,7 @@
 #This code is run using Python 3.6.2 and Numpy 1.14.0
 #Added one time checking of L-constraint
-
+#Added L-checking for whole configuration
 import numpy as np
-
-class RDLT:
-	def __init__(self, vertices, l_cons, c_cons):
-		self.vertices = []
-		self.l_cons = []
-		self.c_cons = []
-		self.matrix =[]
-		self.arcs = []
 
 #Data Pre-processing
 vertices = np.array(input("Vertices:").split())
@@ -31,23 +23,20 @@ while(1):
 	conf = input()
 	if (conf == "0"):
 		break
-	conf = conf.split(",")
+	conf = conf.split()
 	X = np.zeros(len(vertices))
+	Z = np.zeros(len(arcs))
 	for pair in conf:
-		pair = pair.split()
+		for i in range(0, len(arcs)):
+			if (pair == arcs[i]):
+				Z[i] = 1
+		pair = pair.split("_")
 		for vertex in range(0, len(vertices)):
 			if vertices[vertex] == pair[1]:
 				X[vertex] = 1
 
-	l_cons_new = l_cons + matrix.dot(X)
+	l_cons_new = l_cons + (matrix.dot(X))*Z
 	print("L_k:" + str(l_cons_new)) 
 	print("Arcs to be traversed:" + str(l_cons - l_cons_new) + "\n")	
 	l_cons = l_cons_new
-
-
-
-#L-constraint checking
-
-
-
 
