@@ -14,6 +14,7 @@ def checkValidActivityProfile(activity_profile, vertices, start_vertex, final_ve
 		if(arc[0] == start_vertex):
 			source_vertices[arc[0]] = 1
 		else:
+			print("Not start vertex")
 			return 0;	
 
 	for idx, reach_config in enumerate(activity_profile):
@@ -21,10 +22,12 @@ def checkValidActivityProfile(activity_profile, vertices, start_vertex, final_ve
 		 	if (source_vertices[arc[0]] == 1):
 		 		source_vertices[arc[1]] = 1
 		 	else:
+		 		print("Not corresponding")
 		 		return 0;
 
 	for arc in activity_profile[-1]:
 		if (arc[1] != final_vertex):
+			print("Not final vertex")
 			return 0;
 
 	return 1;
@@ -64,15 +67,16 @@ def Generate(S, V, E, start_vertex, final_vertex):
 	C_vector.append(np.array(C))
 
 	print("Matrix:")
-	matrix = pd.DataFrame(np.zeros(shape=(len(V), len(arcs))), columns=V)
+
+	matrix = np.zeros(shape=(len(V), len(arcs)))
+	matrix = pd.DataFrame(matrix.reshape(-1, len(matrix)), columns=V)
+
 	matrix = matrix.set_index(arcs)
-
-
 	for arc in arcs:
 		dest_vertex = arc.split("_")
 		dest_vertex = dest_vertex[1]
 		matrix.set_value(arc, dest_vertex, -1)
-	#print (matrix)
+	print (matrix)
 
 	for idx, reach_config in enumerate(S):
 		for i in V:
@@ -85,7 +89,7 @@ def Generate(S, V, E, start_vertex, final_vertex):
 			Z[arc[0]+'_'+arc[1]] = 1
 
 		Y = matrix.dot([v for v in X.values()])
-
+		print(Z.values())
 		L = L + Y*[v for v in Z.values()]
 		C = C - C_init*[v for v in Z.values()]
 		print(L)
