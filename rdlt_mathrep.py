@@ -60,43 +60,58 @@ def Generate(S, V, E, start_vertex, final_vertex):
 	C_init = C
 	X = {}
 	Z = {}
+	Y = {}
 	L_vector = []
 	C_vector = []
 
 	L_vector.append(np.array(L))
 	C_vector.append(np.array(C))
 
-	print("Matrix:")
+	# print("Matrix:")
 
-	matrix = np.zeros(shape=(len(V), len(arcs)))
-	matrix = pd.DataFrame(matrix.reshape(-1, len(matrix)), columns=V)
+	# matrix = np.zeros(shape=(len(V), len(arcs)))
+	# matrix = pd.DataFrame(matrix.reshape(-1, len(matrix)), columns=V)
 
-	matrix = matrix.set_index(arcs)
-	for arc in arcs:
-		dest_vertex = arc.split("_")
-		dest_vertex = dest_vertex[1]
-		matrix.set_value(arc, dest_vertex, -1)
-	print (matrix)
+	# matrix = matrix.set_index(arcs)
+	# for arc in arcs:
+	# 	dest_vertex = arc.split("_")
+	# 	dest_vertex = dest_vertex[1]
+	# 	matrix.set_value(arc, dest_vertex, -1)
+	# print (matrix)
 
-	for idx, reach_config in enumerate(S):
+	for idy, reach_config in enumerate(S):
+		print("\nTimestep: "+str(idy))
+		print(L)
+		print(C)
 		for i in V:
 			X[i] = 0
 		for j in arcs:
 			Z[j] = 0
+			Y[j] = 0
 
-		for arc in reach_config:
+
+		for idx, arc in enumerate(reach_config):
 			X[arc[1]] = 1
 			Z[arc[0]+'_'+arc[1]] = 1
 
-		Y = matrix.dot([v for v in X.values()])
-		print(Z.values())
-		L = L + Y*[v for v in Z.values()]
-		C = C - C_init*[v for v in Z.values()]
-		print(L)
-		print(C)
-		print (Y)
+			for y in arcs:
+				lala = y.split("_")
+				if(arc[1] == lala[1]):
+					#print (y)
+					Y[arc[0]+'_'+arc[1]] = -1
+				# else:
+				# 	print("No")
 
-		check = checkLCY(L, C, Y)
+
+		Y_new = np.array([y for y in Y.values()])
+		Z_new = np.array([v for v in Z.values()])
+		#Y = matrix.dot([v for v in X.values()])
+
+		L = L + Y_new*Z_new
+		C = C - C_init*Z_new
+
+
+		check = checkLCY(L, C, Y_new)
 		if (any(constraint == 1 for constraint in check)):
 			Err = (idx, check)
 			S = {'L':L_vector, 'C':C_vector}
@@ -104,13 +119,15 @@ def Generate(S, V, E, start_vertex, final_vertex):
 		L_vector.append(np.array(L))
 		C_vector.append(np.array(C))
 
+
 	S =  {'L':L_vector, 'C':C_vector}
 	return S, 0
 
 def Verify(S, V, E, start_vertex, final_vertex):
 	S_vector, Err = Generate(S, V, E, start_vertex, final_vertex)
 	if (Err != 0):
-		return 0;
+		print("Error_Verify: Err != 0")
+		return 0
 
 	L = S_vector['L']
 	C = S_vector['C']
@@ -120,15 +137,17 @@ def Verify(S, V, E, start_vertex, final_vertex):
 		L_result = L[id_rc] - L[id_rc+1]
 		for id_r, r in enumerate(L_result):
 			if (r == 0 and (arcs[id_r].split("_") in reach_config)):
+				print("Error_Verify: First If in For Loop")
 				return 0
 			if (r == 1 and (arcs[id_r].split("_") not in reach_config)):
-			
+				print("Error_Verify: Second If in For Loop")
 				return 0
 
 		for id_c, c in enumerate(C[id_rc+1]):
 			if(c != 0 and (arcs[id_c].split("_") in reach_config)):
 				print(str(id_rc) + "Fuck" + str(id_c))
-				return 0;
+				print("Error_Verify: Third If in For Loop")
+				return 0
 
 	return S_vector
 
@@ -137,6 +156,7 @@ def Sound(S, V, E, start_vertex, final_vertex):
 	S_vector = Verify(S, V, E, start_vertex, final_vertex)
 
 	if (S_vector == 0):
+		print("Error_Sound: S_vector = 0")
 		return 0
 	else:
 		C = S_vector['C']
