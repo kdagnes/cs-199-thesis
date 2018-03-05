@@ -4,7 +4,6 @@
 #Removed destination matrix
 
 import numpy as np
-import pandas as pd
 from sympy import *
 
 def checkValidActivityProfile(activity_profile, vertices, start_vertex, final_vertex):
@@ -44,15 +43,20 @@ def checkValidActivityProfile(activity_profile, vertices, start_vertex, final_ve
 	return 1;
 
 
-def checkLCY (L, C, Y):	
-
+def checkLCY (L, C, Y, C_init):	
+	
 	LC = [0,0]	
 	if (any(arc < 0 for arc in L)):
 		print ("L not satisfied")
 		LC[0] = 1
+
+	HQ = []
+	for id_y, y in enumerate(Y):
+		if ((y == -1) and (C[id_y] == 0) and (C_init[id_y] not in HQ)):
+			HQ.append(C_init[id_y])
 	for i in range(0, len(Y)):
-		if(Y[i] == -1 and (C[i] not in [0, Symbol("eps")])): #No HQ yet
-			print("C not satisfied" + str(C[i]) + " Y[i]:" + str(Y[i]))
+		if(Y[i] == -1 and (C[i] not in [0, Symbol("eps"), HQ])): #No HQ yet
+			print("C constraint is not satisfied: " + str(C[i]))
 			LC[1] = 1
 	return LC
 
@@ -82,22 +86,10 @@ def Generate(S, V, E, start_vertex, final_vertex):
 	L_vector.append(np.array(L))
 	C_vector.append(np.array(C))
 
-	# print("Matrix:")
-
-	# matrix = np.zeros(shape=(len(V), len(arcs)))
-	# matrix = pd.DataFrame(matrix.reshape(-1, len(matrix)), columns=V)
-
-	# matrix = matrix.set_index(arcs)
-	# for arc in arcs:
-	# 	dest_vertex = arc.split("_")
-	# 	dest_vertex = dest_vertex[1]
-	# 	matrix.set_value(arc, dest_vertex, -1)
-	# print (matrix)
-
 	for idy, reach_config in enumerate(S):
-		# print("\nTimestep: "+str(idy))
-		# print(L)
-		# print(C)
+		print("\nTimestep: "+str(idy))
+		print(L)
+		print(C)
 		for i in V:
 			X[i] = 0
 		for j in arcs:
@@ -105,21 +97,18 @@ def Generate(S, V, E, start_vertex, final_vertex):
 			Y[j] = 0
 
 
+		list_of_goal_vertices = []
 		for idx, arc in enumerate(reach_config):
 			X[arc[1]] = 1
 			Z[arc[0]+'_'+arc[1]] = 1
 
-			#print(arc[0]+'_'+arc[1])
-			for y in arcs:
-				lala = y.split("_")
-				if(arc[1] == lala[1]):
-					#print (y)
-					Y[arc[0]+'_'+arc[1]] = -1
-					# print("y:")
-					# print(arc[0]+'_'+arc[1])
-				# else:
-				# 	print("No")
-		#print("Z:" + str(len(Z)) + "Y:" + str(len(Y)))
+			if(arc[1] not in list_of_goal_vertices):
+				for y in arcs:
+					lala = y.split("_")
+					if(arc[1] == lala[1]):
+						Y[lala[0]+'_'+lala[1]] = -1
+				list_of_goal_vertices.append(arc[1])
+
 
 		Y_new = np.array([y for y in Y.values()])
 		Z_new = np.array([v for v in Z.values()])
@@ -133,7 +122,7 @@ def Generate(S, V, E, start_vertex, final_vertex):
 
 		#print (Z_new)
 
-		check = checkLCY(L, C, Y_new)
+		check = checkLCY(L, C, Y_new, C_vector[0])
 		if (any(constraint == 1 for constraint in check)):
 			Err = (idx, check)
 			S = {'L':L_vector, 'C':C_vector}
@@ -142,6 +131,9 @@ def Generate(S, V, E, start_vertex, final_vertex):
 		C_vector.append(np.array(C))
 
 
+	print("\nTimestep: "+str(idy+1))
+	print(L)
+	print(C)
 	S =  {'L':L_vector, 'C':C_vector}
 	return S, 0
 
@@ -184,7 +176,7 @@ def Sound(S, V, E, start_vertex, final_vertex):
 		print ("The given activity profile is verified")
 		C = S_vector['C']
 		if (any(c != 0 for c in C[len(C)-1])):
-			print("Not Sound because of C constraint")
+			print("Not sound because not all arcs are traversed at least once")
 			print(C[len(C)-1])
 			return 0
 		return 1
