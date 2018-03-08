@@ -1,0 +1,15 @@
+4 4 
+u1 b 0
+u2 c 0
+u3 c 0
+u4 b 0
+u1_u2 EPSILON 1
+u1_u3 EPSILON 1
+u2_u4 a 1
+u3_u4 b 1
+4
+u1_u2
+u1_u3
+u1_u2
+u2_u4 u3_u4
+u1 u4

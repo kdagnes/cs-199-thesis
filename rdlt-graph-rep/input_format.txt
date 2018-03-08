@@ -1,0 +1,23 @@
+<# of vertices><space><# of arcs>
+<vertex id><space><vertex type><space><rbs(1 or 0)>
+<vertex id><space><vertex type><space><rbs(1 or 0)>
+<vertex id><space><vertex type><space><rbs(1 or 0)>
+.
+.
+.
+<arc_source><underscore><arc_destination><space><arc_constraint><space><arc_maximumtraversal>
+<arc_source><underscore><arc_destination><space><arc_constraint><space><arc_maximumtraversal>
+<arc_source><underscore><arc_destination><space><arc_constraint><space><arc_maximumtraversal>
+<arc_source><underscore><arc_destination><space><arc_constraint><space><arc_maximumtraversal>
+.
+.
+.
+<# of reachability configurations>
+<config1_arc1_source><underscore><arc1_destination><space><config1_arc2_source><underscore><arc2_destination>
+<config2_arc1_source><underscore><arc1_destination>
+<config3_arc1_source><underscore><arc1_destination>
+<config4_arc1_source><underscore><arc1_destination><space><config4_arc2_source><underscore><arc2_destination>
+.
+.
+.
+<start_vertex><space><final_vertex>
