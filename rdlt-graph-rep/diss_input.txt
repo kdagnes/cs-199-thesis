@@ -1,0 +1,62 @@
+15 27
+w	c	0
+x1 	c	0
+x2	c	0
+x3	c	0
+x4	c	0
+x5	c	0
+x6	c	0
+x7	c	0
+x8	c	0
+x9	c	0
+x10	c	0
+y1	c	0
+y2	c	0
+y3	c	0
+z	c	0
+w_x1	t	17
+x1_x2	EPSILON	6
+x1_x3	EPSILON	6
+x1_x6	EPSILON	2
+x1_x7	EPSILON	1
+x1_x8	EPSILON	1
+x1_x9	EPSILON	1
+x1_x10	EPSILON	1
+x2_x4	t1	3
+x2_x5	t3	3
+x3_x4	r3	3
+x3_x5	r1	3
+x4_x7	bc	1
+x4_x8	br	1
+x4_x6	t	1
+x5_x6	t	1
+x5_x7	bc	1
+x5_x8	br	1
+x6_x7	pr	1
+x6_x8	pc	1
+x7_y1	s	1
+x8_y1	s	1
+x9_x1	EPSILON	1
+x10_z	EPSILON	1
+y1_y2	EPSILON	2
+y2_x9	vr	1
+y2_x10	vc	1
+w z
+17
+w_x1
+x1_x2 x1_x3
+x2_x5 x3_x5
+x5_x6 x1_x6
+x6_x8 x5_x8 x1_x8
+x8_y1
+y1_y2
+y2_x9 x1_x9
+x9_x1
+x1_x2 x1_x3
+x2_x4 x3_x4
+x4_x6
+x6_x7 x4_x7 x1_x7
+x7_y1
+y1_y2
+y2_x10 x1_x10
+x10_z

@@ -9,6 +9,6 @@ v2_v2 EPSILON 1
 v2_v3 EPSILON 1
 v2_v4 b 1
 v3_v4 b 1
+v1 v4
 1
 v1_v4 
-v1 v4
