@@ -12,6 +12,7 @@
 .
 .
 .
+<start_vertex><space><final_vertex>
 <# of reachability configurations>
 <config1_arc1_source><underscore><arc1_destination><space><config1_arc2_source><underscore><arc2_destination>
 <config2_arc1_source><underscore><arc1_destination>
@@ -20,4 +21,4 @@
 .
 .
 .
-<start_vertex><space><final_vertex>
+
