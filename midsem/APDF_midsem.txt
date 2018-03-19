@@ -1,0 +1,8 @@
+x1 x6
+6
+x1_x3 x1_x4
+x3_x6 x4_x6
+x6_x1
+x1_x2 x1_x3 x1_x4
+x1_x5 x2_x5
+x1_x6 x3_x6 x4_x6 x5_x6
